@@ -1,73 +1,72 @@
-# Welcome to your Lovable project
+# DigiTwin
 
-## Project info
+## Unlock Your Legacy
 
-**URL**: https://lovable.dev/projects/0247a28d-abe2-4008-91ad-152ee7feb24c
+Preserve your life, memories, and personality forever. DigiTwin empowers you to create a true-to-life digital copy that can share your story, wisdom, and values with loved ones—now and in the future.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## About DigiTwin
 
-**Use Lovable**
+DigiTwin is a platform designed to help you create the most accurate digital twin of your personality. By answering a detailed questionnaire, you enable DigiTwin to build a digital persona capable of realistically interacting on your behalf. The more thoughtful and comprehensive your answers, the more authentic and lifelike your digital twin will be.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0247a28d-abe2-4008-91ad-152ee7feb24c) and start prompting.
+### Why DigiTwin?
+- **Preserve your story:** Ensure your experiences, values, and wisdom are never lost.
+- **Connect across generations:** Share your legacy with loved ones, now and in the future.
+- **True-to-life interaction:** Your digital twin can converse and interact as you would, powered by your unique personality and memories.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+### 1. Clone the Repository
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
+cd digi-twin
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Install Dependencies
+```sh
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. Start the Development Server
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### 4. Begin Your Journey
+Open your browser and follow the onboarding process to start building your digital twin. Answer the questionnaire as thoroughly as possible for the best results.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
+## Technologies Used
 - Vite
 - TypeScript
 - React
-- shadcn-ui
+- shadcn/ui
 - Tailwind CSS
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/0247a28d-abe2-4008-91ad-152ee7feb24c) and click on Share -> Publish.
+## Deployment
+To deploy DigiTwin, use your preferred hosting provider. For static hosting, build the project with:
+```sh
+npm run build
+```
+Then serve the contents of the `dist` directory.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Contributing
+We welcome contributions! Please open issues or submit pull requests to help improve DigiTwin.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## License
+This project is licensed under the MIT License.
+
+---
+
+## Contact
+For questions or support, please contact the project maintainer.

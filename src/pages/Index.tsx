@@ -765,7 +765,7 @@ const Index = () => {
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
           <img 
-            src="/lovable-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png" 
+            src="/digi-twin-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png" 
             alt="DigiTwin Logo" 
             className="w-32 h-32 mx-auto mb-8 object-contain"
           />
@@ -798,7 +798,7 @@ const Index = () => {
       <div className="border-b border-gray-200 px-4 py-6">
         <div className="max-w-2xl mx-auto">
           <img 
-            src="/lovable-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png" 
+            src="/digi-twin-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png" 
             alt="DigiTwin Logo" 
             className="w-48 h-auto mb-4"
           />
