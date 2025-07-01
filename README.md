@@ -99,4 +99,4 @@ This project is licensed under the MIT License.
 ---
 
 ## Contact
-For questions or support, please contact the project maintainer.
+For questions or support, please contact the project maintainer or visit [https://tervahagn.com](https://tervahagn.com).
