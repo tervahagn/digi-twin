@@ -2,6 +2,19 @@
 
 # DigiTwin
 
+## Table of Contents
+- [Unlock Your Legacy](#unlock-your-legacy)
+- [About DigiTwin](#about-digitwin)
+- [Features](#features)
+- [Demo](#demo)
+- [Getting Started](#getting-started)
+- [Technologies Used](#technologies-used)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
+
 ## Unlock Your Legacy
 
 Preserve your life, memories, and personality forever. DigiTwin empowers you to create a true-to-life digital copy that can share your story, wisdom, and values with loved ones—now and in the future.
@@ -16,6 +29,21 @@ DigiTwin is a platform designed to help you create the most accurate digital twi
 - **Preserve your story:** Ensure your experiences, values, and wisdom are never lost.
 - **Connect across generations:** Share your legacy with loved ones, now and in the future.
 - **True-to-life interaction:** Your digital twin can converse and interact as you would, powered by your unique personality and memories.
+
+---
+
+## Features
+- Create a digital twin of your personality
+- Interactive, detailed questionnaire
+- Audio and text input support
+- Modern, responsive UI
+- Share your digital legacy with loved ones
+
+---
+
+## Demo
+![Screenshot](public/digi-twin-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png)
+[Live Demo](https://digi-twin.tervahagn.com)
 
 ---
 
