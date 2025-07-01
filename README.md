@@ -1,3 +1,5 @@
+![DigiTwin Logo](public/digi-twin-uploads/76e842d1-4ab7-45b9-889d-abe02e3ac692.png)
+
 # DigiTwin
 
 ## Unlock Your Legacy
