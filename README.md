@@ -63,12 +63,19 @@ npm install
 > **Note**
 > Run `npm install` before executing `npm run lint` so that ESLint dependencies such as `@eslint/js` are available.
 
-### 3. Start the Development Server
+### 3. Configure Environment Variables
+Create a `.env` file based on `.env.example` and add your Supabase project credentials:
+```sh
+cp .env.example .env
+```
+Fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` with values from your Supabase project.
+
+### 4. Start the Development Server
 ```sh
 npm run dev
 ```
 
-### 4. Begin Your Journey
+### 5. Begin Your Journey
 Open your browser and follow the onboarding process to start building your digital twin. Answer the questionnaire as thoroughly as possible for the best results.
 
 ---
