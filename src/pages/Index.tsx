@@ -761,26 +761,22 @@ const Index = () => {
   };
 
   const handleDownloadPDF = () => {
-    if (!email) {
-      toast({
-        title: "Email Required",
-        description: "Please provide your email address first.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // include the current answer before generating the PDF
+    const currentAnswerData: Answer = {
+      questionId: currentQuestion.id,
+      responseType,
+      textAnswer: responseType === 'text' ? textResponse : undefined,
+      audioBlob: responseType === 'audio' ? audioBlob : undefined,
+      wordCount: responseType === 'text' ? wordCount : undefined
+    };
 
-    if (!isValidEmail(email)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
+    const updatedAnswers = [
+      ...answers.filter(a => a.questionId !== currentQuestion.id),
+      currentAnswerData,
+    ];
 
     try {
-      generateSurveyPDF(QUESTIONS, answers, email);
+      generateSurveyPDF(QUESTIONS, updatedAnswers, email || 'anonymous');
       toast({
         title: "PDF Downloaded",
         description: "Your survey responses have been downloaded as a PDF.",
@@ -923,39 +919,21 @@ const Index = () => {
           />
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Survey Complete!</h1>
           <p className="text-gray-600 mb-8">
-            Choose how you'd like to receive your survey responses:
+            Download your survey responses below:
           </p>
-          
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email address"
-            className="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-gray-400"
-          />
-          
+
           <div className="space-y-4">
             <button
               onClick={handleDownloadPDF}
-              disabled={!isValidEmail(email)}
-              className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
             >
               <Download size={20} />
               Download PDF
             </button>
-            
-            <button
-              onClick={handleSubmit}
-              disabled={!isValidEmail(email) || isSubmitting}
-              className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-            >
-              <Mail size={20} />
-              {isSubmitting ? 'Sending...' : 'Email Results'}
-            </button>
           </div>
-          
+
           <p className="text-sm text-gray-500 mt-4">
-            You can download the PDF immediately or receive a formatted summary via email.
+            Email delivery is temporarily disabled.
           </p>
         </div>
       </div>
@@ -1137,14 +1115,22 @@ const Index = () => {
             >
               Back
             </button>
-            
-            <button
-              onClick={goToNext}
-              disabled={!canProceed}
-              className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {currentQuestionIndex === totalQuestions - 1 ? 'Complete Survey' : 'Next'}
-            </button>
+
+            <div className="flex gap-4">
+              <button
+                onClick={handleDownloadPDF}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              >
+                Download Survey
+              </button>
+              <button
+                onClick={goToNext}
+                disabled={!canProceed}
+                className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {currentQuestionIndex === totalQuestions - 1 ? 'Complete Survey' : 'Next'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ interface Answer {
   wordCount?: number;
 }
 
-export const generateSurveyPDF = (questions: Question[], answers: Answer[], email: string) => {
+export const generateSurveyPDF = (questions: Question[], answers: Answer[], email?: string) => {
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.width;
   const pageHeight = pdf.internal.pageSize.height;
@@ -34,10 +34,12 @@ export const generateSurveyPDF = (questions: Question[], answers: Answer[], emai
   yPosition += 20;
 
   // Email
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'normal');
-  pdf.text(`Email: ${email}`, margin, yPosition);
-  yPosition += 10;
+  if (email) {
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Email: ${email}`, margin, yPosition);
+    yPosition += 10;
+  }
 
   // Date
   pdf.text(`Generated: ${new Date().toLocaleDateString()}`, margin, yPosition);
@@ -107,6 +109,8 @@ export const generateSurveyPDF = (questions: Question[], answers: Answer[], emai
   });
 
   // Download the PDF
-  const filename = `DigiTwin_Survey_${email.replace('@', '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+  const filename = email
+    ? `DigiTwin_Survey_${email.replace('@', '_')}_${new Date().toISOString().split('T')[0]}.pdf`
+    : `DigiTwin_Survey_${new Date().toISOString().split('T')[0]}.pdf`;
   pdf.save(filename);
 };
