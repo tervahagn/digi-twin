@@ -629,6 +629,8 @@ const Index = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isValidEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -768,6 +770,15 @@ const Index = () => {
       return;
     }
 
+    if (!isValidEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       generateSurveyPDF(QUESTIONS, answers, email);
       toast({
@@ -790,6 +801,15 @@ const Index = () => {
       toast({
         title: "Email Required",
         description: "Please provide your email address to submit the survey.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
         variant: "destructive",
       });
       return;
@@ -917,7 +937,7 @@ const Index = () => {
           <div className="space-y-4">
             <button
               onClick={handleDownloadPDF}
-              disabled={!email}
+              disabled={!isValidEmail(email)}
               className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
               <Download size={20} />
@@ -926,7 +946,7 @@ const Index = () => {
             
             <button
               onClick={handleSubmit}
-              disabled={!email || isSubmitting}
+              disabled={!isValidEmail(email) || isSubmitting}
               className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
               <Mail size={20} />
