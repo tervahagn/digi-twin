@@ -2,19 +2,6 @@
 
 # DigiTwin
 
-## Table of Contents
-- [Unlock Your Legacy](#unlock-your-legacy)
-- [About DigiTwin](#about-digitwin)
-- [Features](#features)
-- [Demo](#demo)
-- [Getting Started](#getting-started)
-- [Technologies Used](#technologies-used)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgments](#acknowledgments)
-
 ## Unlock Your Legacy
 
 Preserve your life, memories, and personality forever. DigiTwin empowers you to create a true-to-life digital copy that can share your story, wisdom, and values with loved ones—now and in the future.
@@ -67,15 +54,6 @@ npm run dev
 
 ### 4. Begin Your Journey
 Open your browser and follow the onboarding process to start building your digital twin. Answer the questionnaire as thoroughly as possible for the best results.
-
----
-
-## Technologies Used
-- Vite
-- TypeScript
-- React
-- shadcn/ui
-- Tailwind CSS
 
 ---
 
