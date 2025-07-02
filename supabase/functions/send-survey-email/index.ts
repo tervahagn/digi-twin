@@ -89,10 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
   } catch (error: unknown) {
-    const err = error as Error;
-    console.error('Error in send-survey-email function:', err);
-    return new Response(
-      JSON.stringify({ error: err.message }),
+
       {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -106,8 +103,7 @@ interface SurveyData {
 }
 
 interface QuestionResponse {
-  response_type: 'text' | 'audio';
-  word_count?: number | null;
+
 }
 
 function createEmailContent(

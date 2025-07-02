@@ -60,12 +60,19 @@ cd digi-twin
 npm install
 ```
 
-### 3. Start the Development Server
+### 3. Configure Environment Variables
+Create a `.env` file based on `.env.example` and add your Supabase project credentials:
+```sh
+cp .env.example .env
+```
+Fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` with values from your Supabase project.
+
+### 4. Start the Development Server
 ```sh
 npm run dev
 ```
 
-### 4. Begin Your Journey
+### 5. Begin Your Journey
 Open your browser and follow the onboarding process to start building your digital twin. Answer the questionnaire as thoroughly as possible for the best results.
 
 ---
@@ -90,6 +97,18 @@ Then serve the contents of the `dist` directory.
 
 ## Contributing
 We welcome contributions! Please open issues or submit pull requests to help improve DigiTwin.
+
+### Configuring the `send-survey-email` function
+The `supabase/functions/send-survey-email` function communicates with your Supabase
+project. When running or deploying this function with the Supabase CLI, set the
+following environment variables so it can access your project's database:
+
+- `SUPABASE_URL` – your Supabase project URL
+- `SUPABASE_SERVICE_ROLE_KEY` – the service role key for your project
+
+You can retrieve these values from your Supabase dashboard under **Project
+Settings → API**. For additional details see the
+[Supabase Functions environment variables documentation](https://supabase.com/docs/guides/functions#environment-variables).
 
 ---
 
