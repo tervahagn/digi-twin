@@ -88,10 +88,11 @@ const handler = async (req: Request): Promise<Response> => {
         },
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in send-survey-email function:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: message }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -100,7 +101,19 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-function createEmailContent(surveyData: any, questionResponses: any[]): string {
+interface SurveyData {
+  completed_at: string;
+}
+
+interface QuestionResponse {
+  response_type: string;
+  word_count: number | null;
+}
+
+function createEmailContent(
+  surveyData: SurveyData,
+  questionResponses: QuestionResponse[]
+): string {
   const totalTextResponses = questionResponses.filter(r => r.response_type === 'text').length;
   const totalAudioResponses = questionResponses.filter(r => r.response_type === 'audio').length;
   const totalWords = questionResponses
