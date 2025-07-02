@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Square, Mic } from 'lucide-react';
+import { Play, Pause, Square, Mic, Download, Mail } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { generateSurveyPDF } from "@/utils/pdfGenerator";
 
 interface Question {
   id: string;
@@ -627,6 +628,7 @@ const Index = () => {
   const [textResponse, setTextResponse] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -756,6 +758,33 @@ const Index = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleDownloadPDF = () => {
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please provide your email address first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      generateSurveyPDF(QUESTIONS, answers, email);
+      toast({
+        title: "PDF Downloaded",
+        description: "Your survey responses have been downloaded as a PDF.",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Download Error",
+        description: "There was an error generating the PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSubmit = async () => {
     if (!email) {
       toast({
@@ -765,6 +794,8 @@ const Index = () => {
       });
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       console.log('Starting survey submission...');
@@ -856,6 +887,8 @@ const Index = () => {
         description: "There was an error submitting your survey. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -870,8 +903,9 @@ const Index = () => {
           />
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Survey Complete!</h1>
           <p className="text-gray-600 mb-8">
-            Please provide your email address to receive a summary of your responses.
+            Choose how you'd like to receive your survey responses:
           </p>
+          
           <input
             type="email"
             value={email}
@@ -879,13 +913,30 @@ const Index = () => {
             placeholder="Enter your email address"
             className="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-gray-400"
           />
-          <button
-            onClick={handleSubmit}
-            disabled={!email}
-            className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Submit Survey
-          </button>
+          
+          <div className="space-y-4">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={!email}
+              className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            >
+              <Download size={20} />
+              Download PDF
+            </button>
+            
+            <button
+              onClick={handleSubmit}
+              disabled={!email || isSubmitting}
+              className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            >
+              <Mail size={20} />
+              {isSubmitting ? 'Sending...' : 'Email Results'}
+            </button>
+          </div>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            You can download the PDF immediately or receive a formatted summary via email.
+          </p>
         </div>
       </div>
     );
