@@ -60,6 +60,9 @@ cd digi-twin
 npm install
 ```
 
+> **Note**
+> Run `npm install` before executing `npm run lint` so that ESLint dependencies such as `@eslint/js` are available.
+
 ### 3. Start the Development Server
 ```sh
 npm run dev
