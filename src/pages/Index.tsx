@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Square, Mic } from 'lucide-react';
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Question {
   id: string;
@@ -630,6 +632,8 @@ const Index = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  const { toast } = useToast();
+
   const currentQuestion = QUESTIONS[currentQuestionIndex];
   const totalQuestions = QUESTIONS.length;
 
@@ -753,11 +757,106 @@ const Index = () => {
   };
 
   const handleSubmit = async () => {
-    // Here you would integrate with Supabase to save data and send email
-    console.log('Survey completed with email:', email);
-    console.log('All answers:', answers);
-    // Show thank you message
-    alert('Thank you for completing the DigiTwin survey! Your responses have been saved.');
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please provide your email address to submit the survey.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      console.log('Starting survey submission...');
+      
+      // Prepare responses data
+      const responsesData = answers.map(answer => ({
+        questionId: answer.questionId,
+        responseType: answer.responseType,
+        textAnswer: answer.textAnswer || null,
+        wordCount: answer.wordCount || null,
+        // Note: Audio blob handling would need additional implementation for file storage
+        hasAudio: !!answer.audioBlob
+      }));
+
+      // Insert main survey response
+      const { data: surveyResponse, error: surveyError } = await supabase
+        .from('survey_responses')
+        .insert({
+          email: email,
+          responses: responsesData,
+          completed_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (surveyError) {
+        console.error('Error inserting survey response:', surveyError);
+        throw new Error('Failed to save survey response');
+      }
+
+      console.log('Survey response saved:', surveyResponse.id);
+
+      // Insert individual question responses
+      const questionResponsesData = answers.map(answer => {
+        const question = QUESTIONS.find(q => q.id === answer.questionId);
+        return {
+          survey_response_id: surveyResponse.id,
+          question_id: answer.questionId,
+          section: question?.section || '',
+          question_text: question?.question || '',
+          response_type: answer.responseType,
+          text_answer: answer.textAnswer || null,
+          word_count: answer.wordCount || null,
+          // Audio blob URL would be set after file upload
+          audio_blob_url: answer.audioBlob ? 'pending_upload' : null
+        };
+      });
+
+      const { error: questionError } = await supabase
+        .from('question_responses')
+        .insert(questionResponsesData);
+
+      if (questionError) {
+        console.error('Error inserting question responses:', questionError);
+        throw new Error('Failed to save question responses');
+      }
+
+      console.log('Question responses saved successfully');
+
+      // Call edge function to send email
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-survey-email', {
+        body: {
+          email: email,
+          surveyResponseId: surveyResponse.id
+        }
+      });
+
+      if (emailError) {
+        console.error('Error sending email:', emailError);
+        // Don't throw here - survey is saved, email is secondary
+        toast({
+          title: "Survey Saved",
+          description: "Your survey has been saved, but there was an issue sending the confirmation email.",
+          variant: "default",
+        });
+      } else {
+        console.log('Email sent successfully:', emailResult);
+        toast({
+          title: "Survey Completed!",
+          description: "Your responses have been saved and a summary has been sent to your email.",
+          variant: "default",
+        });
+      }
+
+    } catch (error) {
+      console.error('Error submitting survey:', error);
+      toast({
+        title: "Submission Error",
+        description: "There was an error submitting your survey. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (isCompleted) {

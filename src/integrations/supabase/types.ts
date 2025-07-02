@@ -9,7 +9,83 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      question_responses: {
+        Row: {
+          audio_blob_url: string | null
+          created_at: string
+          id: string
+          question_id: string
+          question_text: string
+          response_type: string
+          section: string
+          survey_response_id: string | null
+          text_answer: string | null
+          word_count: number | null
+        }
+        Insert: {
+          audio_blob_url?: string | null
+          created_at?: string
+          id?: string
+          question_id: string
+          question_text: string
+          response_type: string
+          section: string
+          survey_response_id?: string | null
+          text_answer?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          audio_blob_url?: string | null
+          created_at?: string
+          id?: string
+          question_id?: string
+          question_text?: string
+          response_type?: string
+          section?: string
+          survey_response_id?: string | null
+          text_answer?: string | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_responses_survey_response_id_fkey"
+            columns: ["survey_response_id"]
+            isOneToOne: false
+            referencedRelation: "survey_responses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      survey_responses: {
+        Row: {
+          completed_at: string
+          created_at: string
+          email: string
+          email_sent: boolean | null
+          email_sent_at: string | null
+          id: string
+          responses: Json
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          email: string
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          id?: string
+          responses: Json
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          email?: string
+          email_sent?: boolean | null
+          email_sent_at?: string | null
+          id?: string
+          responses?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
