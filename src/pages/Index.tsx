@@ -616,6 +616,8 @@ const QUESTIONS: Question[] = [
   }
 ];
 
+const SECTIONS = Array.from(new Set(QUESTIONS.map((q) => q.section)));
+
 const Index = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -640,6 +642,9 @@ const Index = () => {
 
   const currentQuestion = QUESTIONS[currentQuestionIndex];
   const totalQuestions = QUESTIONS.length;
+  const currentSectionIndex = SECTIONS.findIndex(
+    (section) => section === currentQuestion.section
+  );
 
   const wordCount = textResponse.trim().split(/\s+/).filter(word => word.length > 0).length;
   const isTextRequirementMet = !currentQuestion.minWords || wordCount >= currentQuestion.minWords;
@@ -991,7 +996,7 @@ const Index = () => {
             </span>
             <div className="flex-1 mx-4">
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-gray-900 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${((currentQuestionIndex + 1) / totalQuestions) * 100}%` }}
                 />
@@ -1000,6 +1005,16 @@ const Index = () => {
             <span className="text-sm text-gray-600">
               {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
             </span>
+          </div>
+          <div className="mt-2 text-sm text-gray-600 text-center">
+            {SECTIONS.map((_, index) => (
+              <React.Fragment key={index}>
+                <span className={index === currentSectionIndex ? 'font-bold' : ''}>
+                  Section {index + 1}
+                </span>
+                {index < SECTIONS.length - 1 && ' > '}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>
