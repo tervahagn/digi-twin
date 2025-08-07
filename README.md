@@ -51,9 +51,9 @@ DigiTwin is a web application that guides users through an extensive biographica
 
 ### GitHub Pages Deployment
 
-This project is configured for deployment to GitHub Pages from the `main` branch:
+This project is configured for deployment to GitHub Pages from the `main` branch (serving the `docs/` folder):
 
-- **Build static files**: `npm run build:gh-pages` (output in `docs/`)
+- **Build static files**: `npm run build:gh-pages` (output goes into `docs/`)
 
 #### GitHub Pages Setup
 1. Go to repository Settings → Pages

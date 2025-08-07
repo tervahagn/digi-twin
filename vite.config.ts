@@ -4,12 +4,10 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig(async ({ command, mode }) => {
-  // Determine base path based on environment
+  // Determine base path: absolute in dev, relative in production builds
   const isGitHubPages = process.env.GITHUB_PAGES === "true";
   const isDev = command === "serve";
-  
-  // Use /digi-twin/ for GitHub Pages, / for development and custom domain
-  const basePath = isGitHubPages ? "/digi-twin/" : "/";
+  const basePath = isDev ? "/" : "./";
 
   return {
     plugins: [
