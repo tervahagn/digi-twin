@@ -29,8 +29,19 @@ jobs:
         NODE_ENV: production
         GITHUB_PAGES: true
 
-    - name: Add .nojekyll file
-      run: touch ./dist/public/.nojekyll
+    - name: Add .nojekyll file and copy CNAME
+      run: |
+        touch ./dist/public/.nojekyll
+        cp CNAME ./dist/public/CNAME || echo "No CNAME file found"
+
+    - name: List build output (debug)
+      run: |
+        echo "Contents of dist/public:"
+        ls -la ./dist/public/
+        echo "Contents of dist/public/assets:"
+        ls -la ./dist/public/assets/ || echo "No assets directory"
+        echo "Contents of index.html:"
+        cat ./dist/public/index.html
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
