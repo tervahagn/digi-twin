@@ -12,7 +12,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.PROD && import.meta.env.VITE_GITHUB_PAGES ? "/digi-twin" : ""}>
         <Routes>
           <Route path="/" element={<OptimizedIndex />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

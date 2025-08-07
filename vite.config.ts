@@ -8,9 +8,8 @@ export default defineConfig(async ({ command, mode }) => {
   const isGitHubPages = process.env.GITHUB_PAGES === "true";
   const isDev = command === "serve";
   
-  // For custom domain (digi-twin.tervahagn.com), use root path
-  // For github.io subdomain, use /digi-twin/
-  const basePath = isDev ? "/" : (isGitHubPages ? "/digi-twin/" : "/");
+  // Use /digi-twin/ for GitHub Pages, / for development and custom domain
+  const basePath = isGitHubPages ? "/digi-twin/" : "/";
 
   return {
     plugins: [
