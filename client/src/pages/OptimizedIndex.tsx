@@ -998,11 +998,8 @@ const OptimizedIndex = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="mb-4">
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex justify-center mb-2">
                 <img src={logoPath} alt="DigiTwin" className="h-12 w-auto" />
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  DigiTwin
-                </h1>
               </div>
               <h2 className="text-xl font-semibold text-slate-700 mb-3">
                 Unlock Your Legacy
@@ -1250,9 +1247,8 @@ const OptimizedIndex = () => {
           <div className="max-w-6xl mx-auto px-4 py-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center">
                   <img src={logoPath} alt="DigiTwin" className="h-10 w-auto" />
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
                 </div>
                 <h2 className="text-lg font-semibold text-slate-700">Survey Questions Preview</h2>
                 <p className="text-sm text-slate-600">{email}</p>
@@ -1360,7 +1356,6 @@ const OptimizedIndex = () => {
             <div>
               <div className="flex items-center gap-2">
                 <img src={logoPath} alt="DigiTwin" className="h-8 w-auto" />
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
               </div>
               <h2 className="text-sm font-semibold text-slate-700">Unlock Your Legacy</h2>
               <p className="text-xs text-slate-600">{email}</p>
