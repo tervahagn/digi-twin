@@ -25,6 +25,9 @@ jobs:
 
     - name: Build for GitHub Pages
       run: npm run build:gh-pages
+      env:
+        NODE_ENV: production
+        GITHUB_PAGES: true
 
     - name: Add .nojekyll file
       run: touch ./dist/public/.nojekyll
