@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertSurveySchema, insertResponseSchema } from "@shared/schema";
 import { z } from "zod";
+import { sendEmail, generateSurveyEmailHTML, generateSurveyEmailText } from './emailService';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create or get existing survey by email
@@ -154,6 +155,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(exportData);
     } catch (error) {
       res.status(500).json({ error: "Failed to export survey data" });
+    }
+  });
+
+  // Send survey via email
+  app.post("/api/surveys/:id/email", async (req, res) => {
+    try {
+      const surveyId = parseInt(req.params.id);
+      const { recipientEmail, senderEmail = 'noreply@digitwin.com' } = req.body;
+      
+      if (!recipientEmail) {
+        return res.status(400).json({ error: "Recipient email is required" });
+      }
+      
+      const survey = await storage.getSurvey(surveyId);
+      if (!survey) {
+        return res.status(404).json({ error: "Survey not found" });
+      }
+      
+      const responses = await storage.getResponsesBySurveyId(surveyId);
+      
+      // Define questions inline since we can't import from client
+      const QUESTIONS = [
+        { id: '1.1', section: 'Biography & Personal History', question: 'What is your full name, all nicknames, surnames, pseudonyms you have used in your life?', purpose: 'identification, connection to different life periods' }
+        // We'll pass the real questions from frontend
+      ];
+      
+      const htmlContent = generateSurveyEmailHTML(survey.email, responses, req.body.questions || QUESTIONS);
+      const textContent = generateSurveyEmailText(survey.email, responses, req.body.questions || QUESTIONS);
+      
+      const emailSent = await sendEmail({
+        to: recipientEmail,
+        from: senderEmail,
+        subject: `DigiTwin Survey Results for ${survey.email}`,
+        text: textContent,
+        html: htmlContent
+      });
+      
+      if (emailSent) {
+        res.json({ success: true, message: "Email sent successfully" });
+      } else {
+        res.status(500).json({ error: "Failed to send email" });
+      }
+    } catch (error) {
+      console.error('Email sending error:', error);
+      res.status(500).json({ error: "Failed to send email" });
     }
   });
 

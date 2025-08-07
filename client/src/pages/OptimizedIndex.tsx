@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Square, Mic, Download, Save, Mail, Bot, ChevronDown, ChevronUp, FileText } from 'lucide-react';
+import { Play, Pause, Square, Mic, Download, Save, Mail, Bot, ChevronDown, ChevronUp, FileText, ChevronLeft, ChevronRight, User } from 'lucide-react';
 import { useSurvey } from '@/hooks/useSurvey';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -625,6 +625,9 @@ const OptimizedIndex = () => {
   const [isCompletionView, setIsCompletionView] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   
+  // Admin functionality
+  const isAdminUser = email === 'tervahagn@gmail.com';
+  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -802,9 +805,34 @@ const OptimizedIndex = () => {
     setExpandedSections(newExpanded);
   };
 
-  const sendToEmail = () => {
-    // TODO: Implement email functionality
-    alert('Email functionality would be implemented here');
+  const sendToEmail = async () => {
+    if (!survey || !responses) return;
+    
+    const recipientEmail = prompt('Enter email address to send the survey results:');
+    if (!recipientEmail) return;
+    
+    try {
+      const response = await fetch(`/api/surveys/${survey.id}/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipientEmail,
+          questions: QUESTIONS // Pass questions to backend
+        })
+      });
+
+      if (response.ok) {
+        alert(`Survey results sent successfully to ${recipientEmail}!`);
+      } else {
+        const error = await response.json();
+        alert(`Failed to send email: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Email error:', error);
+      alert('Failed to send email. Please try again.');
+    }
   };
 
   const sendToAI = () => {
@@ -964,13 +992,20 @@ const OptimizedIndex = () => {
   // Email collection screen
   if (!hasStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-slate-800 mb-2">DigiTwin Survey</CardTitle>
-            <p className="text-slate-600">
-              Preserve your life story and personality for future generations
-            </p>
+            <div className="mb-4">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                DigiTwin
+              </h1>
+              <h2 className="text-xl font-semibold text-slate-700 mb-3">
+                Unlock Your Legacy
+              </h2>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Preserve your life, memories, and personality forever. DigiTwin empowers you to create a true-to-life digital copy that can share your story, wisdom, and values with loved ones—now and in the future.
+              </p>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -981,7 +1016,7 @@ const OptimizedIndex = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full p-3 mt-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400"
+                className="w-full p-3 mt-1 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <p className="text-sm text-slate-500 mt-1">
                 We'll use this to save your progress and send you your results
@@ -1194,8 +1229,9 @@ const OptimizedIndex = () => {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-xl font-bold text-slate-800">DigiTwin Survey</h1>
-              <p className="text-sm text-slate-600">{email}</p>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
+              <h2 className="text-sm font-semibold text-slate-700">Unlock Your Legacy</h2>
+              <p className="text-xs text-slate-600">{email}</p>
             </div>
             <div className="flex gap-2">
               <Button
@@ -1365,13 +1401,48 @@ const OptimizedIndex = () => {
 
             {/* Navigation */}
             <div className="flex justify-between pt-6 border-t">
-              <Button
-                onClick={goToPrevious}
-                disabled={currentQuestionIndex === 0}
-                variant="outline"
-              >
-                Previous
-              </Button>
+              <div className="flex gap-2 items-center">
+                {/* Admin navigation arrows */}
+                {isAdminUser && (
+                  <div className="flex gap-2 mr-4 items-center">
+                    <Button
+                      onClick={goToPrevious}
+                      disabled={currentQuestionIndex === 0}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1"
+                    >
+                      <ChevronLeft size={16} />
+                      Prev
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        if (currentQuestionIndex < totalQuestions - 1) {
+                          setCurrentQuestionIndex(prev => prev + 1);
+                        }
+                      }}
+                      disabled={currentQuestionIndex === totalQuestions - 1}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1"
+                    >
+                      Next
+                      <ChevronRight size={16} />
+                    </Button>
+                    <div className="flex items-center gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                      <User size={12} />
+                      Admin
+                    </div>
+                  </div>
+                )}
+                <Button
+                  onClick={goToPrevious}
+                  disabled={currentQuestionIndex === 0}
+                  variant="outline"
+                >
+                  Previous
+                </Button>
+              </div>
               
               <Button
                 onClick={goToNext}
