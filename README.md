@@ -29,6 +29,8 @@ DigiTwin is a web application that guides users through an extensive biographica
 
 **GitHub Pages**: https://tervahagn.github.io/digi-twin/
 
+> **Note**: If you see this README instead of the app, the GitHub Actions deployment is still in progress. Please wait a few minutes and refresh.
+
 ## Getting Started
 
 ### Local Development
