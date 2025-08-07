@@ -43,6 +43,9 @@ jobs:
         ls -la ./dist/public/assets/ || echo "No assets directory"
         echo "Contents of index.html:"
         cat ./dist/public/index.html
+        echo "Verifying asset files exist:"
+        ls ./dist/public/assets/index-*.js && echo "✅ JS files found" || echo "❌ JS files missing"
+        ls ./dist/public/assets/index-*.css && echo "✅ CSS files found" || echo "❌ CSS files missing"
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
@@ -50,3 +53,5 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist/public
+        force_orphan: true
+        enable_jekyll: false
