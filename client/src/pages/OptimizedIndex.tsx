@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Square, Mic, Download, Save } from 'lucide-react';
+import { Play, Pause, Square, Mic, Download, Save, Mail, Bot, ChevronDown, ChevronUp, FileText } from 'lucide-react';
 import { useSurvey } from '@/hooks/useSurvey';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,6 +46,569 @@ const QUESTIONS: Question[] = [
     requirement: '≥ 300 words or 2 minutes audio',
     minWords: 300,
     minAudioMinutes: 2
+  },
+  {
+    id: '1.4',
+    section: 'Biography & Personal History',
+    question: 'What events in your youth influenced your worldview?',
+    purpose: 'capture a pivotal period of worldview change',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '1.5',
+    section: 'Biography & Personal History',
+    question: 'What were the happiest and most difficult moments in your life? Describe each.',
+    purpose: 'form an emotional scale of personality',
+    requirement: '≥ 600 words or 4 minutes audio',
+    minWords: 600,
+    minAudioMinutes: 4
+  },
+  {
+    id: '1.6',
+    section: 'Biography & Personal History',
+    question: 'Tell about turning points—decisions that changed your life.',
+    purpose: 'identify key choices and their impact',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '1.7',
+    section: 'Biography & Personal History',
+    question: 'Imagine your life as a book—what would you call the chapters?',
+    purpose: 'reveal self-narrative and structure of your life path',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 2: Values, Beliefs & Character Traits
+  {
+    id: '2.1',
+    section: 'Values, Beliefs & Character Traits',
+    question: 'What qualities do you value most in yourself?',
+    purpose: 'record the core of self-identity',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '2.2',
+    section: 'Values, Beliefs & Character Traits',
+    question: 'What qualities in people are unacceptable to you? Why?',
+    purpose: 'identify negative triggers in social interaction',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '2.3',
+    section: 'Values, Beliefs & Character Traits',
+    question: 'What life principles do you try to follow?',
+    purpose: 'record behavioral attitudes',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '2.4',
+    section: 'Values, Beliefs & Character Traits',
+    question: 'Your credo or life motto.',
+    purpose: 'establish core motivation',
+    requirement: '≥ 150 words or 1 minute audio',
+    minWords: 150,
+    minAudioMinutes: 1
+  },
+  {
+    id: '2.5',
+    section: 'Values, Beliefs & Character Traits',
+    question: 'Were there moments when you changed your beliefs? Why?',
+    purpose: 'understand flexibility of thinking and evolution of values',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  // Section 3: Relationships & Significant People
+  {
+    id: '3.1',
+    section: 'Relationships & Significant People',
+    question: 'Who were the most important people in your life? What exactly did they give you?',
+    purpose: 'identify emotional anchors and life guidelines',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '3.2',
+    section: 'Relationships & Significant People',
+    question: 'Is there someone you no longer communicate with, but who greatly influenced your life?',
+    purpose: 'record ambiguous or forgotten influences',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '3.3',
+    section: 'Relationships & Significant People',
+    question: 'What does friendship mean to you? What does true friendship look like in action?',
+    purpose: 'record ideas of trust, loyalty, connection',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '3.4',
+    section: 'Relationships & Significant People',
+    question: 'Describe your experience in love: significant relationships, what you learned.',
+    purpose: 'understand emotional attachments and growth',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '3.5',
+    section: 'Relationships & Significant People',
+    question: 'How do you behave in conflict? How do you prefer to resolve disputes?',
+    purpose: 'record behavioral patterns in disagreement',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '3.6',
+    section: 'Relationships & Significant People',
+    question: 'What moments with close people do you remember most often? Why?',
+    purpose: 'reveal significant emotional episodes',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 4: Professional & Creative Experience
+  {
+    id: '4.1',
+    section: 'Professional & Creative Experience',
+    question: 'Tell about your career: where you started, where you ended up.',
+    purpose: 'reflect professional path and identity',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '4.2',
+    section: 'Professional & Creative Experience',
+    question: 'What do you consider yourself truly competent in?',
+    purpose: 'record professional strengths',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '4.3',
+    section: 'Professional & Creative Experience',
+    question: 'What achievement are you most proud of?',
+    purpose: 'reveal meaningful outcomes of your efforts',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '4.4',
+    section: 'Professional & Creative Experience',
+    question: 'What did you dream of doing, but never managed to try?',
+    purpose: 'record unrealized ambitions and interests',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '4.5',
+    section: 'Professional & Creative Experience',
+    question: 'What knowledge and skills would you like to pass on to others? Why?',
+    purpose: 'identify valuable legacy',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 5: Hobbies, Tastes & Preferences
+  {
+    id: '5.1',
+    section: 'Hobbies, Tastes & Preferences',
+    question: 'What gives you pleasure in everyday life?',
+    purpose: 'record sources of joy and recovery',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '5.2',
+    section: 'Hobbies, Tastes & Preferences',
+    question: 'What hobbies do you have and how did you come to them?',
+    purpose: 'reflect interests and personal contexts',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '5.3',
+    section: 'Hobbies, Tastes & Preferences',
+    question: 'Favorite books, movies, music—and why these?',
+    purpose: 'identify taste and cultural context',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '5.4',
+    section: 'Hobbies, Tastes & Preferences',
+    question: 'Are there places that are especially dear to you?',
+    purpose: 'reflect geographic attachments',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  // Section 6: Emotions & Behavioral Reactions
+  {
+    id: '6.1',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What can instantly anger or upset you?',
+    purpose: 'determine triggers of strong reactions',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '6.2',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What situations make you sad or lonely?',
+    purpose: 'record vulnerabilities and lows',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '6.3',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What inspires, uplifts, or gives you strength?',
+    purpose: 'identify sources of motivation',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '6.4',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What do you usually do to cope with strong emotions?',
+    purpose: 'reveal coping strategies',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '6.5',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What mood prevails on your ordinary days?',
+    purpose: 'determine emotional background',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '6.6',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What do you fear most?',
+    purpose: 'understand deep fears',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '6.7',
+    section: 'Emotions & Behavioral Reactions',
+    question: 'What gives you a sense of inner stability and strength?',
+    purpose: 'record anchors and strengths',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 7: Philosophy, Meaning & Legacy
+  {
+    id: '7.1',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'How do you understand the meaning of life?',
+    purpose: 'identify your central philosophical stance',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '7.2',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'How do you relate to death? What happens afterward?',
+    purpose: 'understand attitudes toward finitude',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '7.3',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'What are the main life lessons you have learned?',
+    purpose: 'reveal moral conclusions',
+    requirement: '≥ 500 words or 3 minutes audio',
+    minWords: 500,
+    minAudioMinutes: 3
+  },
+  {
+    id: '7.4',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'What do you regret most in life? Why?',
+    purpose: 'record unresolved issues',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '7.5',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'One piece of advice to your descendants?',
+    purpose: 'formulate your legacy',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '7.6',
+    section: 'Philosophy, Meaning & Legacy',
+    question: 'How would you like to be remembered?',
+    purpose: 'form an image of your memory',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 8: Speech Style & Communication
+  {
+    id: '8.1',
+    section: 'Speech Style & Communication',
+    question: 'What words, phrases, or expressions do you use most often?',
+    purpose: 'record speech markers',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '8.2',
+    section: 'Speech Style & Communication',
+    question: 'What is your usual communication style?',
+    purpose: 'determine intonation',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '8.3',
+    section: 'Speech Style & Communication',
+    question: 'Any accents, dialects, or specific phrases?',
+    purpose: 'record cultural speech',
+    requirement: '≥ 150 words or 1 minute audio',
+    minWords: 150,
+    minAudioMinutes: 1
+  },
+  {
+    id: '8.4',
+    section: 'Speech Style & Communication',
+    question: 'What topics do you enjoy or avoid?',
+    purpose: 'conversational boundaries',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 9: Digital Ethics & Legacy
+  {
+    id: '9.1',
+    section: 'Digital Ethics & Legacy',
+    question: 'What moral principles should your digital twin follow?',
+    purpose: 'set ethical framework',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '9.2',
+    section: 'Digital Ethics & Legacy',
+    question: 'What topics, data, or emotions should be excluded?',
+    purpose: 'privacy boundaries',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '9.3',
+    section: 'Digital Ethics & Legacy',
+    question: 'Who can access your digital twin?',
+    purpose: 'usage boundaries',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '9.4',
+    section: 'Digital Ethics & Legacy',
+    question: 'Can your twin evolve after your death?',
+    purpose: 'define posthumous evolution',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '9.5',
+    section: 'Digital Ethics & Legacy',
+    question: 'For what purposes can it be used?',
+    purpose: 'permitted scenarios',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '9.6',
+    section: 'Digital Ethics & Legacy',
+    question: 'When and under what conditions should it be deactivated?',
+    purpose: 'final limits',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  // Section 10: Daily Habits & Routines
+  {
+    id: '10.1',
+    section: 'Daily Habits & Routines',
+    question: 'Describe your typical day—from morning to night.',
+    purpose: 'recreate daily pattern',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '10.2',
+    section: 'Daily Habits & Routines',
+    question: 'Do you have rituals or recurring actions?',
+    purpose: 'identify routines',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 11: Thinking, Decision-Making & Inner Dialogue
+  {
+    id: '11.1',
+    section: 'Thinking, Decision-Making & Inner Dialogue',
+    question: 'How do you make important decisions?',
+    purpose: 'model internal process',
+    requirement: '≥ 400 words or 2 minutes audio',
+    minWords: 400,
+    minAudioMinutes: 2
+  },
+  {
+    id: '11.2',
+    section: 'Thinking, Decision-Making & Inner Dialogue',
+    question: 'Intuition vs. logic—when?',
+    purpose: 'clarify thinking style',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '11.3',
+    section: 'Thinking, Decision-Making & Inner Dialogue',
+    question: 'How do you talk to yourself?',
+    purpose: 'pattern of inner dialogue',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  // Section 12: Humor & Perception Style
+  {
+    id: '12.1',
+    section: 'Humor & Perception Style',
+    question: 'Do you have a sense of humor? What is it like?',
+    purpose: 'set emotional coloring',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '12.2',
+    section: 'Humor & Perception Style',
+    question: 'What really makes you laugh?',
+    purpose: 'points of amusement',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  // Section 13: Cultural & Social Context
+  {
+    id: '13.1',
+    section: 'Cultural & Social Context',
+    question: 'How has your culture influenced you?',
+    purpose: 'identify cultural codes',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '13.2',
+    section: 'Cultural & Social Context',
+    question: 'How did your generation shape your views?',
+    purpose: 'influence of era',
+    requirement: '≥ 300 words or 2 minutes audio',
+    minWords: 300,
+    minAudioMinutes: 2
+  },
+  {
+    id: '13.3',
+    section: 'Cultural & Social Context',
+    question: 'Important regional/social background features?',
+    purpose: 'add local context',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  // Section 14: Archetypes & Symbols
+  {
+    id: '14.1',
+    section: 'Archetypes & Symbols',
+    question: 'If you chose an archetype (hero, sage, etc.), who would you be? Why?',
+    purpose: 'archetypal basis',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '14.2',
+    section: 'Archetypes & Symbols',
+    question: 'Do you have an inner "hero" or ideal image?',
+    purpose: 'role models',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  // Section 15: Visual Preferences & Metaphors
+  {
+    id: '15.1',
+    section: 'Visual Preferences & Metaphors',
+    question: 'What would a space that reflects you look like?',
+    purpose: 'visual aesthetics',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
+  },
+  {
+    id: '15.2',
+    section: 'Visual Preferences & Metaphors',
+    question: 'If your life were a metaphor (film, animal, color, element)—what and why?',
+    purpose: 'poetic portrait',
+    requirement: '≥ 200 words or 1 minute audio',
+    minWords: 200,
+    minAudioMinutes: 1
   }
 ];
 
@@ -59,6 +622,8 @@ const OptimizedIndex = () => {
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isCompletionView, setIsCompletionView] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -78,12 +643,8 @@ const OptimizedIndex = () => {
 
   const currentQuestion = QUESTIONS[currentQuestionIndex];
   const totalQuestions = QUESTIONS.length;
-  const wordCount = textResponse.trim().split(/\s+/).filter(word => word.length > 0).length;
-  const isTextRequirementMet = !currentQuestion?.minWords || wordCount >= currentQuestion.minWords;
-  const isAudioRequirementMet = !currentQuestion?.minAudioMinutes || (audioBlob && recordingTime >= currentQuestion.minAudioMinutes * 60);
-  const canProceed = responseType === 'text' ? isTextRequirementMet : isAudioRequirementMet;
-
-  // Load existing response when question changes
+  
+  // Update the total questions count in the API call
   useEffect(() => {
     if (responses && currentQuestion) {
       const existingResponse = responses.find((r: any) => r.questionId === currentQuestion.id);
@@ -96,6 +657,12 @@ const OptimizedIndex = () => {
       }
     }
   }, [currentQuestionIndex, responses, currentQuestion]);
+  const wordCount = textResponse.trim().split(/\s+/).filter(word => word.length > 0).length;
+  const isTextRequirementMet = !currentQuestion?.minWords || wordCount >= currentQuestion.minWords;
+  const isAudioRequirementMet = !currentQuestion?.minAudioMinutes || (audioBlob && recordingTime >= currentQuestion.minAudioMinutes * 60);
+  const canProceed = responseType === 'text' ? isTextRequirementMet : isAudioRequirementMet;
+
+
 
   // Auto-save with debouncing
   const debouncedSave = useCallback(() => {
@@ -199,9 +766,10 @@ const OptimizedIndex = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Complete survey
+      // Complete survey and show completion view
       if (survey) {
         completeSurvey(survey.id);
+        setIsCompletionView(true);
       }
     }
   };
@@ -222,6 +790,175 @@ const OptimizedIndex = () => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const toggleSection = (section: string) => {
+    const newExpanded = new Set(expandedSections);
+    if (newExpanded.has(section)) {
+      newExpanded.delete(section);
+    } else {
+      newExpanded.add(section);
+    }
+    setExpandedSections(newExpanded);
+  };
+
+  const sendToEmail = () => {
+    // TODO: Implement email functionality
+    alert('Email functionality would be implemented here');
+  };
+
+  const sendToAI = () => {
+    // TODO: Implement AI analysis
+    alert('AI analysis functionality would be implemented here');
+  };
+
+  const downloadMarkdown = () => {
+    if (!responses || !survey) return;
+    
+    const groupedResponses = responses.reduce((acc: any, response: any) => {
+      const question = QUESTIONS.find(q => q.id === response.questionId);
+      if (question) {
+        const section = question.section;
+        if (!acc[section]) {
+          acc[section] = [];
+        }
+        acc[section].push({ question, response });
+      }
+      return acc;
+    }, {});
+
+    let markdown = `# DigiTwin Biographical Survey\n\n`;
+    markdown += `**Email:** ${email}\n`;
+    markdown += `**Completed:** ${new Date().toLocaleDateString()}\n`;
+    markdown += `**Total Questions Answered:** ${responses.length}\n\n`;
+    markdown += `---\n\n`;
+
+    Object.entries(groupedResponses).forEach(([section, items]: [string, any[]]) => {
+      markdown += `## ${section}\n\n`;
+      
+      items.forEach(({ question, response }, index) => {
+        markdown += `### Q${index + 1}: ${question.question}\n\n`;
+        markdown += `**Purpose:** ${question.purpose}\n`;
+        markdown += `**Requirement:** ${question.requirement}\n\n`;
+        
+        if (response.responseType === 'text') {
+          markdown += `**Answer (${response.wordCount} words):**\n\n${response.textAnswer}\n\n`;
+        } else {
+          markdown += `**Answer:** Audio response recorded\n\n`;
+        }
+        
+        markdown += `---\n\n`;
+      });
+    });
+
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `digitwin-survey-${email.replace('@', '_at_')}-${new Date().toISOString().split('T')[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadPDF = () => {
+    // For now, we'll create a printable HTML version that can be saved as PDF
+    if (!responses || !survey) return;
+    
+    const groupedResponses = responses.reduce((acc: any, response: any) => {
+      const question = QUESTIONS.find(q => q.id === response.questionId);
+      if (question) {
+        const section = question.section;
+        if (!acc[section]) {
+          acc[section] = [];
+        }
+        acc[section].push({ question, response });
+      }
+      return acc;
+    }, {});
+
+    let htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DigiTwin Survey - ${email}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        h1 { color: #2563eb; border-bottom: 3px solid #2563eb; padding-bottom: 10px; }
+        h2 { color: #1e40af; margin-top: 30px; }
+        h3 { color: #1e3a8a; margin-top: 20px; }
+        .meta { background: #f8fafc; padding: 15px; border-left: 4px solid #2563eb; margin-bottom: 20px; }
+        .question { border-left: 4px solid #93c5fd; padding-left: 15px; margin-bottom: 20px; }
+        .answer { background: #f1f5f9; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .purpose { font-style: italic; color: #64748b; font-size: 14px; }
+        .word-count { color: #059669; font-weight: bold; font-size: 12px; }
+        @media print { body { margin: 20px; } }
+    </style>
+</head>
+<body>
+    <h1>DigiTwin Biographical Survey</h1>
+    
+    <div class="meta">
+        <strong>Email:</strong> ${email}<br>
+        <strong>Completed:</strong> ${new Date().toLocaleDateString()}<br>
+        <strong>Total Questions Answered:</strong> ${responses.length}
+    </div>
+`;
+
+    Object.entries(groupedResponses).forEach(([section, items]: [string, any[]]) => {
+      htmlContent += `<h2>${section}</h2>`;
+      
+      items.forEach(({ question, response }, index) => {
+        htmlContent += `
+        <div class="question">
+            <h3>Q${index + 1}: ${question.question}</h3>
+            <div class="purpose">
+                Purpose: ${question.purpose} • ${question.requirement}
+            </div>
+            <div class="answer">
+        `;
+        
+        if (response.responseType === 'text') {
+          htmlContent += `
+                <div class="word-count">${response.wordCount} words</div>
+                <p>${response.textAnswer.replace(/\n/g, '<br>')}</p>
+          `;
+        } else {
+          htmlContent += `<p><em>Audio response recorded</em></p>`;
+        }
+        
+        htmlContent += `
+            </div>
+        </div>
+        `;
+      });
+    });
+
+    htmlContent += `</body></html>`;
+
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const newWindow = window.open(url, '_blank');
+    
+    if (newWindow) {
+      newWindow.onload = () => {
+        setTimeout(() => {
+          newWindow.print();
+        }, 500);
+      };
+    }
+    
+    // Also offer direct download of HTML file
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `digitwin-survey-${email.replace('@', '_at_')}-${new Date().toISOString().split('T')[0]}.html`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 1000);
   };
 
   // Email collection screen
@@ -273,6 +1010,175 @@ const OptimizedIndex = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-slate-800 mx-auto mb-4"></div>
           <p className="text-slate-600">Loading your survey...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Completion screen with all Q&A
+  if (isCompletionView && responses) {
+    const groupedResponses = responses.reduce((acc: any, response: any) => {
+      const question = QUESTIONS.find(q => q.id === response.questionId);
+      if (question) {
+        const section = question.section;
+        if (!acc[section]) {
+          acc[section] = [];
+        }
+        acc[section].push({ question, response });
+      }
+      return acc;
+    }, {});
+
+    return (
+      <div className="min-h-screen bg-slate-50">
+        {/* Header */}
+        <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-slate-800 mb-2">🎉 Survey Complete!</h1>
+              <p className="text-lg text-slate-600">Your DigiTwin biographical survey has been completed</p>
+              <p className="text-sm text-slate-500 mt-2">{email} • {responses.length} questions answered</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Action buttons */}
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold text-slate-800 mb-4">What would you like to do next?</h2>
+            
+            {/* Download options */}
+            <div className="mb-6">
+              <h3 className="text-lg font-medium text-slate-700 mb-3">Download Your Survey</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button
+                  onClick={downloadPDF}
+                  className="flex items-center justify-center gap-3 p-4 h-auto bg-red-600 hover:bg-red-700"
+                >
+                  <FileText size={20} />
+                  <div className="text-left">
+                    <div className="font-semibold">Download as PDF</div>
+                    <div className="text-sm opacity-90">Printable formatted document</div>
+                  </div>
+                </Button>
+                
+                <Button
+                  onClick={downloadMarkdown}
+                  variant="outline"
+                  className="flex items-center justify-center gap-3 p-4 h-auto border-blue-600 text-blue-600 hover:bg-blue-50"
+                >
+                  <Download size={20} />
+                  <div className="text-left">
+                    <div className="font-semibold">Download as Markdown</div>
+                    <div className="text-sm opacity-75">Text format for editing</div>
+                  </div>
+                </Button>
+              </div>
+            </div>
+
+            {/* Other actions */}
+            <div>
+              <h3 className="text-lg font-medium text-slate-700 mb-3">Share & Analyze</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button
+                  onClick={sendToEmail}
+                  variant="outline"
+                  className="flex items-center justify-center gap-3 p-4 h-auto border-green-600 text-green-600 hover:bg-green-50"
+                >
+                  <Mail size={20} />
+                  <div className="text-left">
+                    <div className="font-semibold">Send to Email</div>
+                    <div className="text-sm opacity-75">Email your responses</div>
+                  </div>
+                </Button>
+                
+                <Button
+                  onClick={sendToAI}
+                  variant="outline"
+                  className="flex items-center justify-center gap-3 p-4 h-auto border-purple-600 text-purple-600 hover:bg-purple-50"
+                >
+                  <Bot size={20} />
+                  <div className="text-left">
+                    <div className="font-semibold">Create Digital Twin</div>
+                    <div className="text-sm opacity-75">AI analysis & digital copy</div>
+                  </div>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* All responses organized by section */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Your Complete Responses</h2>
+            
+            {Object.entries(groupedResponses).map(([section, items]: [string, any[]]) => (
+              <Card key={section} className="overflow-hidden">
+                <CardHeader 
+                  className="cursor-pointer hover:bg-slate-50 transition-colors"
+                  onClick={() => toggleSection(section)}
+                >
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{section}</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                        {items.length} questions
+                      </span>
+                      {expandedSections.has(section) ? 
+                        <ChevronUp size={20} className="text-slate-500" /> : 
+                        <ChevronDown size={20} className="text-slate-500" />
+                      }
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                {expandedSections.has(section) && (
+                  <CardContent className="border-t border-slate-100">
+                    <div className="space-y-6 pt-4">
+                      {items.map(({ question, response }, index) => (
+                        <div key={question.id} className="border-l-4 border-blue-200 pl-4">
+                          <div className="mb-3">
+                            <h4 className="font-medium text-slate-800 mb-1">
+                              Q{index + 1}: {question.question}
+                            </h4>
+                            <p className="text-sm text-slate-500">
+                              Purpose: {question.purpose} • {question.requirement}
+                            </p>
+                          </div>
+                          
+                          <div className="bg-slate-50 rounded-lg p-4">
+                            {response.responseType === 'text' ? (
+                              <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">TEXT</span>
+                                  <span className="text-xs text-slate-500">
+                                    {response.wordCount} words
+                                  </span>
+                                </div>
+                                <p className="text-slate-700 whitespace-pre-wrap leading-relaxed">
+                                  {response.textAnswer}
+                                </p>
+                              </div>
+                            ) : (
+                              <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">AUDIO</span>
+                                  <span className="text-xs text-slate-500">Audio response recorded</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-slate-600">
+                                  <Mic size={16} />
+                                  <span>Audio response (playback would be implemented)</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
