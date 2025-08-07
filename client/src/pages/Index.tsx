@@ -718,7 +718,7 @@ const Index = () => {
       questionId: currentQuestion.id,
       responseType,
       textAnswer: responseType === 'text' ? textResponse : undefined,
-      audioBlob: responseType === 'audio' ? audioBlob : undefined,
+      audioBlob: responseType === 'audio' ? (audioBlob || undefined) : undefined,
       wordCount: responseType === 'text' ? wordCount : undefined
     };
 
@@ -753,11 +753,39 @@ const Index = () => {
   };
 
   const handleSubmit = async () => {
-    // Here you would integrate with Supabase to save data and send email
-    console.log('Survey completed with email:', email);
-    console.log('All answers:', answers);
-    // Show thank you message
-    alert('Thank you for completing the DigiTwin survey! Your responses have been saved.');
+    try {
+      // Convert answers to API format
+      const responses = answers.map(answer => ({
+        questionId: answer.questionId,
+        responseType: answer.responseType,
+        textAnswer: answer.textAnswer || null,
+        audioUrl: null, // For now, we'll handle audio storage separately
+        wordCount: answer.wordCount || null,
+      }));
+
+      // Submit to API
+      const result = await fetch('/api/surveys/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          responses,
+        }),
+      });
+
+      if (!result.ok) {
+        throw new Error('Failed to submit survey');
+      }
+
+      const data = await result.json();
+      console.log('Survey submitted successfully:', data);
+      alert('Thank you for completing the DigiTwin survey! Your responses have been saved.');
+    } catch (error) {
+      console.error('Error submitting survey:', error);
+      alert('There was an error submitting your survey. Please try again.');
+    }
   };
 
   if (isCompleted) {
