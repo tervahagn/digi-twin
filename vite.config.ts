@@ -33,8 +33,13 @@ export default defineConfig(async ({ command, mode }) => {
     },
     root: path.resolve(import.meta.dirname, "client"),
     base: basePath,
+    server: {
+      port: 5000,
+    },
     build: {
-      outDir: path.resolve(import.meta.dirname, "dist/public"),
+      outDir: isGitHubPages
+        ? path.resolve(import.meta.dirname, "docs")
+        : path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
       assetsDir: "assets",
     },

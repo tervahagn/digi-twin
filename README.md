@@ -51,15 +51,14 @@ DigiTwin is a web application that guides users through an extensive biographica
 
 ### GitHub Pages Deployment
 
-This project is configured for automatic deployment to GitHub Pages:
+This project is configured for deployment to GitHub Pages from the `main` branch:
 
-- **Automatic**: Push to `main` branch triggers deployment via GitHub Actions
-- **Manual Build**: `npm run build:gh-pages`
+- **Build static files**: `npm run build:gh-pages` (output in `docs/`)
 
 #### GitHub Pages Setup
 1. Go to repository Settings → Pages
-2. Set source to "GitHub Actions"
-3. Push to main branch to trigger deployment
+2. Under "Source", select **main** branch and `/docs` folder
+3. Save to enable GitHub Pages serving from `docs/`
 
 ### Full Production Setup (Optional)
 
