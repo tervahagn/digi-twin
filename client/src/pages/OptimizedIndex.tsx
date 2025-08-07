@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, Square, Mic, Download, Save, Mail, Bot, ChevronDown, ChevronUp, FileText, ChevronLeft, ChevronRight, User } from 'lucide-react';
+import logoPath from '@assets/logo 3_1754592565987.png';
 import { useSurvey } from '@/hooks/useSurvey';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -624,6 +625,7 @@ const OptimizedIndex = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompletionView, setIsCompletionView] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [showPreview, setShowPreview] = useState(false);
   
   // Admin functionality
   const isAdminUser = email === 'tervahagn@gmail.com';
@@ -996,9 +998,12 @@ const OptimizedIndex = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="mb-4">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                DigiTwin
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                <img src={logoPath} alt="DigiTwin" className="h-12 w-auto" />
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  DigiTwin
+                </h1>
+              </div>
               <h2 className="text-xl font-semibold text-slate-700 mb-3">
                 Unlock Your Legacy
               </h2>
@@ -1022,17 +1027,27 @@ const OptimizedIndex = () => {
                 We'll use this to save your progress and send you your results
               </p>
             </div>
-            <Button 
-              onClick={() => {
-                if (email.trim()) {
-                  setHasStarted(true);
-                }
-              }}
-              disabled={!email.trim()}
-              className="w-full"
-            >
-              Start Survey
-            </Button>
+            <div className="space-y-3">
+              <Button 
+                onClick={() => setShowPreview(true)}
+                disabled={!email.trim()}
+                variant="outline"
+                className="w-full"
+              >
+                Preview All Questions (Recommended)
+              </Button>
+              <Button 
+                onClick={() => {
+                  if (email.trim()) {
+                    setHasStarted(true);
+                  }
+                }}
+                disabled={!email.trim()}
+                className="w-full"
+              >
+                Start Survey Directly
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1219,6 +1234,120 @@ const OptimizedIndex = () => {
     );
   }
 
+  // Questions Preview Screen
+  if (showPreview) {
+    const groupedQuestions = QUESTIONS.reduce((acc: Record<string, Question[]>, question) => {
+      if (!acc[question.section]) {
+        acc[question.section] = [];
+      }
+      acc[question.section].push(question);
+      return acc;
+    }, {});
+
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <div className="bg-white border-b border-slate-200">
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="flex items-center gap-3">
+                  <img src={logoPath} alt="DigiTwin" className="h-10 w-auto" />
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
+                </div>
+                <h2 className="text-lg font-semibold text-slate-700">Survey Questions Preview</h2>
+                <p className="text-sm text-slate-600">{email}</p>
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setShowPreview(false)}
+                  variant="outline"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowPreview(false);
+                    setHasStarted(true);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Start Survey
+                </Button>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-blue-900 mb-2">📋 Prepare for Your DigiTwin Journey</h3>
+              <p className="text-blue-800 text-sm leading-relaxed">
+                This comprehensive survey contains <strong>{QUESTIONS.length} questions</strong> across <strong>{Object.keys(groupedQuestions).length} life categories</strong>. 
+                Take time to review the questions below and consider your responses. You can save progress at any time and return later. 
+                Most questions require 200+ words or 1-3 minutes of audio to capture the depth needed for your digital twin.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <div className="space-y-6">
+            {Object.entries(groupedQuestions).map(([section, questions]) => (
+              <Card key={section} className="shadow-sm">
+                <CardHeader 
+                  className="cursor-pointer hover:bg-slate-50"
+                  onClick={() => toggleSection(section)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg text-slate-800">{section}</CardTitle>
+                      <p className="text-sm text-slate-500 mt-1">
+                        {questions.length} questions • Click to expand
+                      </p>
+                    </div>
+                    {expandedSections.has(section) ? (
+                      <ChevronUp className="h-5 w-5 text-slate-400" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 text-slate-400" />
+                    )}
+                  </div>
+                </CardHeader>
+                
+                {expandedSections.has(section) && (
+                  <CardContent>
+                    <div className="space-y-4">
+                      {questions.map((question, index) => (
+                        <div key={question.id} className="border-l-4 border-blue-200 pl-4 py-2">
+                          <h4 className="font-medium text-slate-800 mb-2">
+                            Q{index + 1}: {question.question}
+                          </h4>
+                          <div className="text-sm text-slate-600 space-y-1">
+                            <p><strong>Purpose:</strong> {question.purpose}</p>
+                            <p><strong>Requirement:</strong> {question.requirement}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </div>
+          
+          <div className="mt-8 text-center">
+            <Button
+              onClick={() => {
+                setShowPreview(false);
+                setHasStarted(true);
+              }}
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 px-8"
+            >
+              Ready to Begin Survey
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const answeredQuestions = responses?.length || 0;
   const progressPercentage = Math.round((answeredQuestions / totalQuestions) * 100);
 
@@ -1229,7 +1358,10 @@ const OptimizedIndex = () => {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
+              <div className="flex items-center gap-2">
+                <img src={logoPath} alt="DigiTwin" className="h-8 w-auto" />
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DigiTwin</h1>
+              </div>
               <h2 className="text-sm font-semibold text-slate-700">Unlock Your Legacy</h2>
               <p className="text-xs text-slate-600">{email}</p>
             </div>
@@ -1264,9 +1396,74 @@ const OptimizedIndex = () => {
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="max-w-4xl mx-auto p-4">
-        <Card className="mb-6">
+      {/* Main content with sidebar */}
+      <div className="max-w-7xl mx-auto p-4 flex gap-6">
+        {/* Remaining Categories Sidebar */}
+        <div className="w-80 flex-shrink-0">
+          <Card className="sticky top-24">
+            <CardHeader>
+              <CardTitle className="text-sm font-semibold text-slate-700">
+                📋 Survey Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {(() => {
+                const groupedQuestions = QUESTIONS.reduce((acc: Record<string, Question[]>, question) => {
+                  if (!acc[question.section]) {
+                    acc[question.section] = [];
+                  }
+                  acc[question.section].push(question);
+                  return acc;
+                }, {});
+                
+                return Object.entries(groupedQuestions).map(([section, questions]) => {
+                  const answeredInSection = responses?.filter(r => 
+                    questions.some(q => q.id === r.questionId)
+                  ).length || 0;
+                  const isCurrentSection = questions.some(q => q.id === currentQuestion.id);
+                  
+                  return (
+                    <div key={section} className={`p-3 rounded-lg border-2 transition-all ${
+                      isCurrentSection 
+                        ? 'border-blue-300 bg-blue-50' 
+                        : 'border-slate-200 bg-slate-50'
+                    }`}>
+                      <h4 className={`text-xs font-medium mb-2 ${
+                        isCurrentSection ? 'text-blue-800' : 'text-slate-700'
+                      }`}>
+                        {section}
+                      </h4>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={isCurrentSection ? 'text-blue-700' : 'text-slate-600'}>
+                          {answeredInSection}/{questions.length} completed
+                        </span>
+                        <div className={`w-16 h-1.5 rounded-full ${
+                          isCurrentSection ? 'bg-blue-200' : 'bg-slate-200'
+                        }`}>
+                          <div
+                            className={`h-full rounded-full transition-all ${
+                              isCurrentSection ? 'bg-blue-600' : 'bg-slate-400'
+                            }`}
+                            style={{ width: `${(answeredInSection / questions.length) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      {isCurrentSection && (
+                        <div className="mt-2 text-xs text-blue-600 font-medium">
+                          ← Currently here
+                        </div>
+                      )}
+                    </div>
+                  );
+                });
+              })()}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Question Content */}
+        <div className="flex-1">
+          <Card className="mb-6">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -1461,6 +1658,7 @@ const OptimizedIndex = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );
