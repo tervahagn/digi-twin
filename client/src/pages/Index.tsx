@@ -764,15 +764,10 @@ const Index = () => {
       }));
 
       // Submit to API
-      const result = await fetch('/api/surveys/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          responses,
-        }),
+      const { api } = await import('@/lib/api');
+      const result = await api.post('/api/surveys/submit', {
+        email,
+        responses,
       });
 
       if (!result.ok) {

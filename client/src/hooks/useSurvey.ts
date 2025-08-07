@@ -48,18 +48,17 @@ export const useSurvey = (email: string) => {
       if (!email) return null;
       
       try {
+        // Import API wrapper
+        const { api } = await import('@/lib/api');
+        
         // Try to get existing survey
-        const response = await fetch(`/api/surveys/by-email/${encodeURIComponent(email)}`);
+        const response = await api.get(`/api/surveys/by-email/${encodeURIComponent(email)}`);
         if (response.ok) {
           return response.json();
         }
         
         // Create new survey if doesn't exist
-        const createResponse = await fetch('/api/surveys', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
+        const createResponse = await api.post('/api/surveys', { email });
         
         if (!createResponse.ok) {
           throw new Error('Failed to create survey');
@@ -85,10 +84,14 @@ export const useSurvey = (email: string) => {
       audioUrl?: string;
       wordCount?: number;
     }) => {
-      const response = await fetch('/api/responses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(responseData),
+      const { api } = await import('@/lib/api');
+      const response = await api.post('/api/responses', {
+        surveyId,
+        questionId,
+        responseType,
+        textAnswer,
+        audioAnswer,
+        wordCount,
       });
       
       if (!response.ok) {
@@ -106,9 +109,8 @@ export const useSurvey = (email: string) => {
   // Complete survey
   const completeSurveyMutation = useMutation({
     mutationFn: async (surveyId: number) => {
-      const response = await fetch(`/api/surveys/${surveyId}/complete`, {
-        method: 'POST',
-      });
+      const { api } = await import('@/lib/api');
+      const response = await api.post(`/api/surveys/${surveyId}/complete`, {});
       
       if (!response.ok) {
         throw new Error('Failed to complete survey');
@@ -124,7 +126,8 @@ export const useSurvey = (email: string) => {
   // Download survey data
   const downloadSurvey = useCallback(async (surveyId: number, filename?: string) => {
     try {
-      const response = await fetch(`/api/surveys/${surveyId}/download`);
+      const { api } = await import('@/lib/api');
+      const response = await api.get(`/api/surveys/${surveyId}/download`);
       if (!response.ok) {
         throw new Error('Failed to download survey data');
       }

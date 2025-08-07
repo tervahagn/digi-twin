@@ -814,15 +814,10 @@ const OptimizedIndex = () => {
     if (!recipientEmail) return;
     
     try {
-      const response = await fetch(`/api/surveys/${survey.id}/email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipientEmail,
-          questions: QUESTIONS // Pass questions to backend
-        })
+      const { api } = await import('@/lib/api');
+      const response = await api.post(`/api/surveys/${survey.id}/email`, {
+        recipientEmail,
+        questions: QUESTIONS // Pass questions to backend
       });
 
       if (response.ok) {
