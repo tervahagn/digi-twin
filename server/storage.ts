@@ -18,10 +18,14 @@ export interface IStorage {
   // Survey methods
   createSurvey(survey: InsertSurvey): Promise<Survey>;
   getSurvey(id: number): Promise<Survey | undefined>;
+  getSurveyByEmail(email: string): Promise<Survey | undefined>;
+  updateSurvey(id: number, updates: { isCompleted?: boolean; completedAt?: Date }): Promise<Survey>;
   
   // Response methods
   createResponse(response: InsertResponse): Promise<Response>;
+  updateResponse(id: number, response: Partial<InsertResponse>): Promise<Response>;
   getResponsesBySurveyId(surveyId: number): Promise<Response[]>;
+  getResponseByQuestionId(surveyId: number, questionId: string): Promise<Response | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -61,9 +65,11 @@ export class MemStorage implements IStorage {
   async createSurvey(insertSurvey: InsertSurvey): Promise<Survey> {
     const id = this.currentSurveyId++;
     const survey: Survey = { 
-      ...insertSurvey, 
-      id, 
-      completedAt: new Date() 
+      ...insertSurvey,
+      id,
+      isCompleted: insertSurvey.isCompleted || false,
+      completedAt: insertSurvey.isCompleted ? new Date() : null,
+      createdAt: new Date()
     };
     this.surveys.set(id, survey);
     return survey;
@@ -71,6 +77,26 @@ export class MemStorage implements IStorage {
 
   async getSurvey(id: number): Promise<Survey | undefined> {
     return this.surveys.get(id);
+  }
+
+  async getSurveyByEmail(email: string): Promise<Survey | undefined> {
+    return Array.from(this.surveys.values()).find(
+      (survey) => survey.email === email
+    );
+  }
+
+  async updateSurvey(id: number, updates: { isCompleted?: boolean; completedAt?: Date }): Promise<Survey> {
+    const survey = this.surveys.get(id);
+    if (!survey) {
+      throw new Error('Survey not found');
+    }
+    const updatedSurvey = { 
+      ...survey, 
+      ...updates,
+      completedAt: updates.isCompleted ? (updates.completedAt || new Date()) : survey.completedAt
+    };
+    this.surveys.set(id, updatedSurvey);
+    return updatedSurvey;
   }
 
   async createResponse(insertResponse: InsertResponse): Promise<Response> {
@@ -87,9 +113,31 @@ export class MemStorage implements IStorage {
     return response;
   }
 
+  async updateResponse(id: number, responseData: Partial<InsertResponse>): Promise<Response> {
+    const response = this.responses.get(id);
+    if (!response) {
+      throw new Error('Response not found');
+    }
+    const updatedResponse = {
+      ...response,
+      ...responseData,
+      textAnswer: responseData.textAnswer ?? response.textAnswer,
+      audioUrl: responseData.audioUrl ?? response.audioUrl,
+      wordCount: responseData.wordCount ?? response.wordCount,
+    };
+    this.responses.set(id, updatedResponse);
+    return updatedResponse;
+  }
+
   async getResponsesBySurveyId(surveyId: number): Promise<Response[]> {
     return Array.from(this.responses.values()).filter(
       (response) => response.surveyId === surveyId
+    );
+  }
+
+  async getResponseByQuestionId(surveyId: number, questionId: string): Promise<Response | undefined> {
+    return Array.from(this.responses.values()).find(
+      (response) => response.surveyId === surveyId && response.questionId === questionId
     );
   }
 }

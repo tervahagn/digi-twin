@@ -11,7 +11,9 @@ export const users = pgTable("users", {
 export const surveys = pgTable("surveys", {
   id: serial("id").primaryKey(),
   email: text("email").notNull(),
-  completedAt: timestamp("completed_at").defaultNow(),
+  isCompleted: boolean("is_completed").default(false),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const responses = pgTable("responses", {
@@ -32,7 +34,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertSurveySchema = createInsertSchema(surveys).pick({
   email: true,
+  isCompleted: true,
 });
+
+export const updateSurveySchema = createInsertSchema(surveys).pick({
+  isCompleted: true,
+  completedAt: true,
+}).partial();
 
 export const insertResponseSchema = createInsertSchema(responses).pick({
   surveyId: true,
