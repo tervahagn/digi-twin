@@ -999,7 +999,7 @@ const OptimizedIndex = () => {
           <CardHeader className="text-center">
             <div className="mb-4">
               <div className="flex justify-center mb-2">
-                <img src={logoPath} alt="DigiTwin" className="h-12 w-auto" />
+                <img src={logoPath} alt="DigiTwin" className="h-36 w-auto" />
               </div>
               <h2 className="text-xl font-semibold text-slate-700 mb-3">
                 Unlock Your Legacy
